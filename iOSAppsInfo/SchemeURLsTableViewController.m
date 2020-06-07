@@ -20,8 +20,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.schemeType = 0;
-    self.publicURLSchemes = [[LMAppController sharedInstance] publicURLSchemes];
-    self.privateURLSchemes = [[LMAppController sharedInstance] privateURLSchemes];
+    NSArray *publicURLSchemes = [[LMAppController sharedInstance] publicURLSchemes];
+    NSArray *privateURLSchemes = [[LMAppController sharedInstance] privateURLSchemes];
+    self.publicURLSchemes = [publicURLSchemes sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    self.privateURLSchemes = [privateURLSchemes sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 - (IBAction)schemeTypeChanged:(UISegmentedControl *)sender {
@@ -47,8 +49,10 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SchemeTableViewCellIdentifier" forIndexPath:indexPath];
     if (self.schemeType == 0) {
         cell.textLabel.text = self.publicURLSchemes[indexPath.row];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
         cell.textLabel.text = self.privateURLSchemes[indexPath.row];
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     return cell;
 }
